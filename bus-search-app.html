@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GoBus - Tìm tuyến xe buýt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F3F6F1; --surface:#FFFFFF; --surface-2:#EAF1EC;
+    --ink:#0E2420; --ink-soft:#5C6E68;
+    --primary:#0B3D36; --accent:#38E1A0; --accent-soft:#D7F7E8;
+    --line:#DCE6DF;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    font-family:'Inter',sans-serif; background:var(--bg);
+    min-height:100vh; display:flex; justify-content:center;
+    padding:24px 12px;
+  }
+  .vg-frame{
+    width:100%; max-width:440px; background:var(--surface);
+    border-radius:28px; overflow:hidden; display:flex; flex-direction:column;
+    min-height:760px; max-height:860px;
+    box-shadow:0 30px 60px -20px rgba(11,61,54,0.25); position:relative;
+  }
+  @media (max-width:480px){
+    body{ padding:0; }
+    .vg-frame{ border-radius:0; min-height:100vh; max-height:none; box-shadow:none; }
+  }
+  .vg-header{ padding:18px 20px; background:var(--primary); color:#fff; display:flex; align-items:center; gap:12px; flex-shrink:0; }
+  .vg-header.is-light{ background:var(--surface); color:var(--ink); border-bottom:1px solid var(--line); }
+  .vg-back-btn{ width:36px;height:36px;border-radius:50%; display:flex;align-items:center;justify-content:center; background:rgba(255,255,255,0.14); border:none; color:inherit; cursor:pointer; flex-shrink:0; }
+  .vg-header.is-light .vg-back-btn{ background:var(--surface-2); }
+  .vg-title{ font-family:'Sora',sans-serif; font-weight:700; font-size:18px; }
+  .vg-subtitle{ font-size:12px; opacity:0.75; margin-top:2px; }
+
+  .vg-content{ flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:18px; }
+  .vg-hero h1{ font-family:'Sora'; font-weight:800; font-size:26px; color:var(--ink); line-height:1.2; margin:0; }
+  .vg-hero p{ color:var(--ink-soft); font-size:14px; margin:4px 0 0; }
+
+  .vg-card{ background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:16px; }
+  .vg-search-card{ background:var(--surface); border-radius:22px; padding:18px; box-shadow:0 16px 40px -16px rgba(11,61,54,0.18); display:flex; flex-direction:column; }
+  .vg-field{ display:flex; align-items:center; gap:10px; padding:10px 4px; }
+  .vg-field-icon{ width:34px;height:34px;border-radius:10px; background:var(--surface-2); display:flex;align-items:center;justify-content:center; color:var(--primary); flex-shrink:0; }
+  .vg-field select{ border:none; background:transparent; font-family:'Inter'; font-size:15px; font-weight:600; color:var(--ink); width:100%; appearance:none; cursor:pointer; }
+  .vg-field select:focus{ outline:none; }
+  .vg-field-label{ font-size:11px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.04em; }
+  .vg-divider-row{ display:flex; align-items:center; }
+  .vg-divider-line{ flex:1; border-top:1px dashed var(--line); margin-left:54px; }
+  .vg-swap-btn{ width:38px;height:38px;border-radius:50%; background:var(--accent); border:none; display:flex;align-items:center;justify-content:center; color:var(--primary); cursor:pointer; margin:-19px auto 0; position:relative; z-index:2; box-shadow:0 6px 14px -4px rgba(56,225,160,0.6); }
+
+  .vg-btn{ font-family:'Inter'; font-weight:700; font-size:15px; border:none; border-radius:14px; padding:14px 18px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; }
+  .vg-btn-primary{ background:var(--accent); color:var(--primary); }
+  .vg-btn-primary:disabled{ opacity:0.4; cursor:not-allowed; }
+  .vg-btn-dark{ background:var(--primary); color:#fff; }
+  .vg-btn-ghost{ background:var(--surface-2); color:var(--ink); }
+  .vg-btn-link{ background:transparent; border:none; color:var(--primary); font-weight:600; padding:8px; cursor:pointer; font-size:13px; }
+
+  .vg-section-title{ font-family:'Sora'; font-weight:700; font-size:15px; color:var(--ink); display:flex; align-items:center; justify-content:space-between; }
+
+  .vg-scroll-row{ display:flex; gap:12px; overflow-x:auto; padding-bottom:4px; margin:0 -20px; padding-left:20px; padding-right:20px; }
+  .vg-route-chip{ flex-shrink:0; width:200px; border-radius:18px; padding:14px; background:var(--surface); border:1px solid var(--line); cursor:pointer; display:flex; flex-direction:column; gap:8px; }
+  .vg-route-code{ font-family:'IBM Plex Mono'; font-weight:600; font-size:13px; padding:3px 8px; border-radius:8px; display:inline-flex; align-self:flex-start; }
+  .vg-route-name{ font-weight:600; font-size:13px; color:var(--ink); line-height:1.3; }
+  .vg-live-dot{ width:6px;height:6px;border-radius:50%; display:inline-block; animation:pulse-dot 1.6s infinite; }
+  .vg-live-row{ display:flex; align-items:center; gap:6px; font-size:11px; color:var(--ink-soft); }
+  @keyframes pulse-dot{ 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.35;transform:scale(0.7);} }
+
+  .vg-mini-line{ position:relative; height:4px; border-radius:2px; background:var(--line); overflow:hidden; margin:2px 0; }
+  .vg-mini-line-fill{ position:absolute; inset:0; border-radius:2px; }
+  .vg-mini-line-dot{ position:absolute; top:-2px; width:8px;height:8px;border-radius:50%; animation:travel 2.4s linear infinite; }
+  @keyframes travel{ 0%{left:0%;} 100%{left:calc(100% - 8px);} }
+
+  .vg-result-card{ border:1px solid var(--line); border-radius:18px; padding:14px; display:flex; flex-direction:column; gap:10px; cursor:pointer; transition:border-color .15s; }
+  .vg-result-card:hover{ border-color:var(--primary); }
+  .vg-result-top{ display:flex; align-items:center; justify-content:space-between; }
+  .vg-tag{ font-size:11px; font-weight:700; padding:3px 8px; border-radius:8px; }
+  .vg-chips-row{ display:flex; gap:6px; flex-wrap:wrap; }
+  .vg-chip{ font-family:'IBM Plex Mono'; font-size:12px; font-weight:600; padding:4px 8px; border-radius:8px; background:var(--surface-2); color:var(--ink); }
+  .vg-chip.is-active{ background:var(--primary); color:#fff; }
+  .vg-result-bottom{ display:flex; align-items:center; justify-content:space-between; font-size:13px; color:var(--ink-soft); }
+  .vg-price{ font-family:'IBM Plex Mono'; font-weight:700; color:var(--ink); font-size:14px; }
+
+  .vg-stop-line{ display:flex; flex-direction:column; position:relative; padding-left:6px; }
+  .vg-stop-track{ position:absolute; left:17px; top:8px; bottom:8px; width:3px; border-radius:2px; }
+  .vg-stop-glow{ position:absolute; left:11px; width:14px;height:14px;border-radius:50%; animation:glow-travel 3.6s ease-in-out infinite; }
+  @keyframes glow-travel{ 0%{top:8px;} 100%{top:calc(100% - 22px);} }
+  .vg-stop-row{ position:relative; display:flex; align-items:flex-start; gap:14px; padding:9px 0; }
+  .vg-stop-dot{ width:14px;height:14px;border-radius:50%; background:#fff; border:3px solid; flex-shrink:0; margin-top:2px; z-index:1; }
+  .vg-stop-dot.is-edge{ width:16px;height:16px; }
+  .vg-stop-name{ font-weight:600; font-size:14px; color:var(--ink); }
+  .vg-stop-time{ font-family:'IBM Plex Mono'; font-size:12px; color:var(--ink-soft); }
+
+  .vg-info-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .vg-info-box{ background:var(--surface-2); border-radius:14px; padding:10px; text-align:center; }
+  .vg-info-box .v{ font-family:'IBM Plex Mono'; font-weight:700; font-size:14px; color:var(--ink); }
+  .vg-info-box .l{ font-size:10px; color:var(--ink-soft); margin-top:2px; text-transform:uppercase; letter-spacing:0.03em; }
+
+  .vg-sticky-bottom{ position:sticky; bottom:0; background:var(--surface); border-top:1px solid var(--line); padding:14px 20px; display:flex; align-items:center; gap:12px; flex-shrink:0; }
+  .vg-sticky-price{ flex:1; }
+  .vg-sticky-price .v{ font-family:'IBM Plex Mono'; font-weight:800; font-size:18px; color:var(--ink); }
+  .vg-sticky-price .l{ font-size:11px; color:var(--ink-soft); }
+
+  .vg-stepper{ display:flex; align-items:center; gap:14px; }
+  .vg-stepper button{ width:34px;height:34px;border-radius:50%; border:1px solid var(--line); background:var(--surface); display:flex;align-items:center;justify-content:center; cursor:pointer; color:var(--primary); }
+  .vg-stepper button:disabled{ opacity:0.3; cursor:not-allowed; }
+  .vg-stepper .n{ font-family:'IBM Plex Mono'; font-weight:700; font-size:16px; width:24px; text-align:center; }
+
+  .vg-time-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .vg-time-option{ border:1.5px solid var(--line); border-radius:12px; padding:10px; text-align:center; font-family:'IBM Plex Mono'; font-weight:600; font-size:14px; cursor:pointer; color:var(--ink); background:var(--surface); }
+  .vg-time-option.is-selected{ border-color:var(--primary); background:var(--primary); color:#fff; }
+
+  .vg-summary-row{ display:flex; justify-content:space-between; font-size:13px; color:var(--ink-soft); padding:5px 0; }
+  .vg-summary-row strong{ color:var(--ink); font-weight:600; text-align:right; }
+  .vg-summary-total{ display:flex; justify-content:space-between; padding-top:10px; border-top:1px dashed var(--line); margin-top:6px; font-weight:700; color:var(--ink); }
+
+  .vg-ticket-card{ border-radius:22px; overflow:hidden; background:var(--surface); box-shadow:0 20px 40px -18px rgba(11,61,54,0.25); border:1px solid var(--line); }
+  .vg-ticket-top{ padding:18px; color:#fff; }
+  .vg-ticket-mid{ padding:18px; display:flex; flex-direction:column; gap:2px; }
+  .vg-perforation{ height:0; border-top:2px dashed var(--line); position:relative; margin:0 18px; }
+  .vg-qr-wrap{ display:flex; align-items:center; gap:14px; padding:18px; justify-content:center; }
+  .vg-qr-grid{ display:grid; grid-template-columns:repeat(8,8px); grid-template-rows:repeat(8,8px); gap:2px; flex-shrink:0; }
+  .vg-qr-cell{ width:8px;height:8px; border-radius:1px; }
+
+  .vg-success-icon{ width:72px;height:72px;border-radius:50%; background:var(--accent-soft); color:var(--primary); display:flex;align-items:center;justify-content:center; margin:6px auto 0; animation:pop-in .4s ease; }
+  @keyframes pop-in{ 0%{transform:scale(0.5);opacity:0;} 100%{transform:scale(1);opacity:1;} }
+
+  .vg-tabs{ display:flex; gap:6px; background:var(--surface-2); border-radius:14px; padding:4px; }
+  .vg-tab{ flex:1; text-align:center; padding:10px 6px; border-radius:11px; font-weight:600; font-size:13px; color:var(--ink-soft); cursor:pointer; border:none; background:transparent; }
+  .vg-tab.is-active{ background:var(--surface); color:var(--primary); box-shadow:0 4px 10px -4px rgba(0,0,0,0.12); }
+
+  .vg-empty{ text-align:center; padding:36px 20px; color:var(--ink-soft); display:flex; flex-direction:column; align-items:center; gap:12px; }
+  .vg-empty-icon{ width:60px;height:60px;border-radius:50%; background:var(--surface-2); display:flex; align-items:center; justify-content:center; color:var(--primary); }
+
+  .vg-bottom-nav{ display:flex; border-top:1px solid var(--line); background:var(--surface); flex-shrink:0; }
+  .vg-nav-btn{ flex:1; padding:12px 0 10px; display:flex; flex-direction:column; align-items:center; gap:4px; border:none; background:transparent; cursor:pointer; color:var(--ink-soft); font-size:11px; font-weight:600; }
+  .vg-nav-btn.is-active{ color:var(--primary); }
+
+  .vg-plan-card{ border:1.5px solid var(--line); border-radius:18px; padding:16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
+  .vg-plan-card.is-selected{ border-color:var(--primary); background:var(--accent-soft); }
+  .vg-plan-badge{ font-size:10px; font-weight:700; padding:2px 7px; border-radius:6px; background:var(--accent); color:var(--primary); margin-left:8px; }
+
+  .screen-enter{ animation:screen-fade .25s ease both; }
+  @keyframes screen-fade{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{ animation:none !important; transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script>
+/* ----------------------------- Mock route data ---------------------------- */
+
+const ROUTES = [
+  { id:"e03", code:"E03", name:"Vinhomes Ocean Park 1 – Long Biên", type:"electric", price:9000, frequency:15,
+    hours:{start:"05:00", end:"22:00"}, color:"#1FAE7C",
+    stops:[
+      {name:"Vinhomes Ocean Park 1", t:0},
+      {name:"Vinhomes Ocean Park 3", t:9},
+      {name:"Cầu Vĩnh Tuy", t:24},
+      {name:"Long Biên", t:38},
+    ]},
+  { id:"e05", code:"E05", name:"Vinhomes Smart City – Hồ Gươm", type:"electric", price:9000, frequency:20,
+    hours:{start:"05:30", end:"22:30"}, color:"#1FAE7C",
+    stops:[
+      {name:"Vinhomes Smart City", t:0},
+      {name:"Cầu Giấy", t:17},
+      {name:"Kim Mã", t:27},
+      {name:"Hồ Gươm", t:40},
+    ]},
+  { id:"09a", code:"09A", name:"Hồ Gươm – Hồ Tây – Cầu Giấy", type:"regular", price:7000, frequency:10,
+    hours:{start:"05:00", end:"21:00"}, color:"#3C7CD9",
+    stops:[
+      {name:"Hồ Gươm", t:0},
+      {name:"Hồ Tây", t:14},
+      {name:"Bưởi", t:24},
+      {name:"Cầu Giấy", t:34},
+    ]},
+  { id:"e09", code:"E09", name:"Vinhomes Ocean Park 1 – Aeon Mall Long Biên", type:"electric", price:8000, frequency:15,
+    hours:{start:"05:00", end:"22:00"}, color:"#1FAE7C",
+    stops:[
+      {name:"Vinhomes Ocean Park 1", t:0},
+      {name:"Vinhomes Ocean Park 2", t:6},
+      {name:"Đa Tốn", t:13},
+      {name:"Aeon Mall Long Biên", t:21},
+    ]},
+  { id:"32", code:"32", name:"Nhổn – Cầu Giấy – Giáp Bát", type:"regular", price:7000, frequency:12,
+    hours:{start:"05:00", end:"21:30"}, color:"#3C7CD9",
+    stops:[
+      {name:"Nhổn", t:0},
+      {name:"Cầu Giấy", t:19},
+      {name:"Kim Mã", t:29},
+      {name:"Bến xe Giáp Bát", t:54},
+    ]},
+];
+
+const STOP_NAMES = Array.from(new Set(ROUTES.flatMap(r => r.stops.map(s => s.name)))).sort((a,b)=>a.localeCompare(b,"vi"));
+
+const PASS_PLANS = [
+  { id:"1m", label:"1 tháng", months:1, price:200000 },
+  { id:"3m", label:"3 tháng", months:3, price:540000, save:"Tiết kiệm 60.000đ" },
+  { id:"6m", label:"6 tháng", months:6, price:1000000, save:"Tiết kiệm 200.000đ" },
+];
+
+const WEEKDAYS = ["CN","T2","T3","T4","T5","T6","T7"];
+
+/* -------------------------------- Helpers ---------------------------------- */
+
+function timeToMinutes(t){ const [h,m]=t.split(":").map(Number); return h*60+m; }
+function minutesToTime(m){
+  const mm = ((m % 1440)+1440)%1440;
+  const h = Math.floor(mm/60), min = mm%60;
+  return String(h).padStart(2,"0") + ":" + String(min).padStart(2,"0");
+}
+function generateSchedule(route){
+  const times = [];
+  let cur = timeToMinutes(route.hours.start);
+  const end = timeToMinutes(route.hours.end);
+  while(cur <= end){ times.push(minutesToTime(cur)); cur += route.frequency; }
+  return times;
+}
+function nextDeparturesFromStop(route, stopName, now, count){
+  count = count || 4;
+  const stop = route.stops.find(s=>s.name===stopName) || route.stops[0];
+  const schedule = generateSchedule(route);
+  const nowMinutes = now.getHours()*60+now.getMinutes();
+  const times = schedule.map(t => (timeToMinutes(t)+stop.t) % 1440);
+  const sorted = [...times].sort((a,b)=>a-b);
+  let upcoming = sorted.filter(m=>m>=nowMinutes);
+  if(upcoming.length < count) upcoming = upcoming.concat(sorted.slice(0, count-upcoming.length));
+  return upcoming.slice(0,count).map(minutesToTime);
+}
+function findRoutesBetween(origin, destination){
+  return ROUTES.filter(r => r.stops.some(s=>s.name===origin) && r.stops.some(s=>s.name===destination));
+}
+function segmentInfo(route, origin, destination){
+  const o = route.stops.find(s=>s.name===origin);
+  const d = route.stops.find(s=>s.name===destination);
+  if(!o || !d) return { duration:null };
+  return { duration: Math.abs(d.t - o.t) };
+}
+function formatVND(n){ return n.toLocaleString("vi-VN") + " đ"; }
+function formatDateVN(d){
+  return WEEKDAYS[d.getDay()] + ", " + String(d.getDate()).padStart(2,"0") + "/" + String(d.getMonth()+1).padStart(2,"0") + "/" + d.getFullYear();
+}
+function addMonths(date, n){ const r = new Date(date); r.setMonth(r.getMonth()+n); return r; }
+function genTicketId(){ return "GB" + Math.random().toString(36).slice(2,8).toUpperCase(); }
+function qrCellsHTML(seed){
+  let x = 0;
+  for(let i=0;i<seed.length;i++) x += seed.charCodeAt(i)*(i+7);
+  let html = "";
+  for(let i=0;i<64;i++){
+    x = (x*1103515245+12345) % 2147483648;
+    const corner = (i<3 || (i>4&&i<8) || (i>=16&&i<19) || (i>=21&&i<24) || (i>=48&&i<51) || (i>=53&&i<56));
+    const on = corner ? true : (x%5===0);
+    html += '<div class="vg-qr-cell" style="background:' + (on?"var(--ink)":"transparent") + '"></div>';
+  }
+  return html;
+}
+function icon(name, size, color){
+  size = size || 18;
+  return '<i data-lucide="' + name + '" style="width:' + size + 'px;height:' + size + 'px;display:inline-block;vertical-align:middle" ' + (color?('color="'+color+'"'):'') + '></i>';
+}
+
+const NOW = new Date();
+const TODAY_STR = formatDateVN(NOW);
+
+/* --------------------------------- State ----------------------------------- */
+
+const state = {
+  view: "home",
+  history: [],
+  origin: "",
+  destination: "",
+  activeRouteId: null,
+  selectedTime: null,
+  passengerCount: 1,
+  selectedPlan: null,
+  tickets: [],
+  confirmedTicketId: null,
+  ticketsTab: "trip",
+};
+
+function getRoute(id){ return ROUTES.find(r=>r.id===id); }
+function getBoardingStop(){
+  const r = getRoute(state.activeRouteId);
+  if(!r) return null;
+  if(state.origin && r.stops.some(s=>s.name===state.origin)) return state.origin;
+  return r.stops[0].name;
+}
+function getAlightingStop(){
+  const r = getRoute(state.activeRouteId);
+  if(!r) return null;
+  if(state.destination && r.stops.some(s=>s.name===state.destination)) return state.destination;
+  return r.stops[r.stops.length-1].name;
+}
+
+/* ---------------------------------- App ------------------------------------ */
+
+const App = {
+  navigateTo(view){ state.history.push(state.view); state.view = view; render(); },
+  goBack(){ const last = state.history.pop() || "home"; state.view = last; render(); },
+  goTab(tab){ state.history = []; state.view = tab; render(); },
+  setOrigin(v){ state.origin = v; render(); },
+  setDestination(v){ state.destination = v; render(); },
+  swapPoints(){ const o = state.origin; state.origin = state.destination; state.destination = o; render(); },
+  search(){
+    if(!state.origin || !state.destination || state.origin===state.destination) return;
+    this.navigateTo("results");
+  },
+  viewAllRoutes(){ state.origin = ""; state.destination = ""; this.navigateTo("results"); },
+  openDetail(routeId){ state.activeRouteId = routeId; this.navigateTo("detail"); },
+  openDetailFromHome(routeId){ state.activeRouteId = routeId; state.origin = ""; state.destination = ""; this.navigateTo("detail"); },
+  openBooking(){
+    const r = getRoute(state.activeRouteId);
+    const times = nextDeparturesFromStop(r, getBoardingStop(), NOW, 6);
+    state.selectedTime = times[0];
+    state.passengerCount = 1;
+    this.navigateTo("booking");
+  },
+  openPass(){ state.selectedPlan = null; this.navigateTo("pass"); },
+  setSelectedTime(t){ state.selectedTime = t; render(); },
+  changePassengers(delta){ state.passengerCount = Math.min(5, Math.max(1, state.passengerCount+delta)); render(); },
+  setSelectedPlan(id){ state.selectedPlan = id; render(); },
+  setTicketsTab(tab){ state.ticketsTab = tab; render(); },
+  confirmBooking(){
+    const r = getRoute(state.activeRouteId);
+    const total = r.price * state.passengerCount;
+    const ticket = {
+      id: genTicketId(), type:"trip", routeCode:r.code, routeName:r.name, color:r.color,
+      from: getBoardingStop(), to: getAlightingStop(), time: state.selectedTime, date: TODAY_STR,
+      count: state.passengerCount, total,
+    };
+    state.tickets.unshift(ticket);
+    state.confirmedTicketId = ticket.id;
+    state.history = [];
+    state.view = "confirm";
+    render();
+  },
+  confirmPass(){
+    const r = getRoute(state.activeRouteId);
+    const plan = PASS_PLANS.find(p=>p.id===state.selectedPlan);
+    const expiry = addMonths(NOW, plan.months);
+    const ticket = {
+      id: genTicketId(), type:"pass", routeCode:r.code, routeName:r.name, color:r.color,
+      planLabel: plan.label, total: plan.price, purchaseDate: TODAY_STR, expiry: formatDateVN(expiry),
+    };
+    state.tickets.unshift(ticket);
+    state.confirmedTicketId = ticket.id;
+    state.history = [];
+    state.view = "confirm";
+    render();
+  },
+};
+
+/* -------------------------------- Screens ----------------------------------- */
+
+function miniLine(color){
+  return '<div class="vg-mini-line"><div class="vg-mini-line-fill" style="background:linear-gradient(90deg, ' + color + '33, ' + color + ')"></div><div class="vg-mini-line-dot" style="background:' + color + '"></div></div>';
+}
+
+function screenHome(){
+  const sameStop = state.origin && state.destination && state.origin===state.destination;
+  return `
+    <div class="vg-header is-light">
+      <div style="display:flex;align-items:center;gap:8px;flex:1">
+        <div style="width:32px;height:32px;border-radius:10px;background:var(--primary);display:flex;align-items:center;justify-content:center">
+          ${icon("zap",16,"var(--accent)")}
+        </div>
+        <span style="font-family:'Sora';font-weight:800;font-size:17px;color:var(--ink)">GoBus</span>
+      </div>
+      <button class="vg-back-btn">${icon("bell",17)}</button>
+    </div>
+    <div class="vg-content screen-enter">
+      <div class="vg-hero">
+        <h1>Đi đâu hôm nay?</h1>
+        <p>Tìm tuyến buýt điện &amp; buýt thường nhanh chóng.</p>
+      </div>
+      <div class="vg-search-card">
+        <div class="vg-field">
+          <div class="vg-field-icon">${icon("map-pin",17)}</div>
+          <div style="flex:1">
+            <div class="vg-field-label">Điểm đi</div>
+            <select onchange="App.setOrigin(this.value)">
+              <option value="">Chọn điểm đi</option>
+              ${STOP_NAMES.map(s=>`<option value="${s}" ${state.origin===s?"selected":""}>${s}</option>`).join("")}
+            </select>
+          </div>
+        </div>
+        <div class="vg-divider-row">
+          <button class="vg-swap-btn" onclick="App.swapPoints()">${icon("arrow-up-down",16)}</button>
+          <div class="vg-divider-line"></div>
+        </div>
+        <div class="vg-field">
+          <div class="vg-field-icon">${icon("map-pin",17)}</div>
+          <div style="flex:1">
+            <div class="vg-field-label">Điểm đến</div>
+            <select onchange="App.setDestination(this.value)">
+              <option value="">Chọn điểm đến</option>
+              ${STOP_NAMES.map(s=>`<option value="${s}" ${state.destination===s?"selected":""}>${s}</option>`).join("")}
+            </select>
+          </div>
+        </div>
+        <div class="vg-field" style="border-top:1px solid var(--line);margin-top:4px">
+          <div class="vg-field-icon">${icon("calendar",17)}</div>
+          <div style="flex:1">
+            <div class="vg-field-label">Ngày đi</div>
+            <div style="font-weight:600;font-size:15px;color:var(--ink)">Hôm nay, ${TODAY_STR}</div>
+          </div>
+        </div>
+        ${sameStop ? `<div style="font-size:12px;color:#C2462F;padding:4px 4px 0">Điểm đi và điểm đến không thể giống nhau.</div>` : ""}
+        <button class="vg-btn vg-btn-primary" style="margin-top:14px" ${(!state.origin||!state.destination||sameStop)?"disabled":""} onclick="App.search()">
+          ${icon("search",17)} Tìm chuyến
+        </button>
+      </div>
+      <div>
+        <div class="vg-section-title">
+          <span>Tuyến phổ biến</span>
+          <button class="vg-btn-link" onclick="App.viewAllRoutes()">Xem tất cả</button>
+        </div>
+        <div class="vg-scroll-row" style="margin-top:10px">
+          ${ROUTES.map(r=>`
+            <div class="vg-route-chip" onclick="App.openDetailFromHome('${r.id}')">
+              <span class="vg-route-code" style="background:${r.color}1A;color:${r.color}">${r.code}</span>
+              <div class="vg-route-name">${r.name}</div>
+              ${miniLine(r.color)}
+              <div class="vg-live-row"><span class="vg-live-dot" style="background:${r.color}"></span>${r.type==="electric"?"Buýt điện":"Buýt thường"} · ${r.frequency} phút/chuyến</div>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function screenResults(){
+  const filtered = (state.origin && state.destination) ? findRoutesBetween(state.origin, state.destination) : ROUTES;
+  const title = (state.origin && state.destination) ? `${state.origin} → ${state.destination}` : "Tất cả tuyến xe";
+  return `
+    <div class="vg-header">
+      <button class="vg-back-btn" onclick="App.goBack()">${icon("arrow-left",18)}</button>
+      <div>
+        <div class="vg-title" style="font-size:16px">${title}</div>
+        <div class="vg-subtitle">Hôm nay, ${TODAY_STR} · ${filtered.length} tuyến phù hợp</div>
+      </div>
+    </div>
+    <div class="vg-content screen-enter">
+      ${filtered.length===0 ? `
+        <div class="vg-empty">
+          <div class="vg-empty-icon">${icon("bus",26)}</div>
+          <div style="font-weight:600;color:var(--ink)">Không tìm thấy tuyến phù hợp</div>
+          <p style="font-size:13px">Thử chọn điểm đi hoặc điểm đến khác.</p>
+          <button class="vg-btn vg-btn-ghost" onclick="App.viewAllRoutes()">Xem tất cả tuyến</button>
+        </div>
+      ` : filtered.map(r=>{
+        const o = (state.origin && r.stops.some(s=>s.name===state.origin)) ? state.origin : r.stops[0].name;
+        const d = (state.destination && r.stops.some(s=>s.name===state.destination)) ? state.destination : r.stops[r.stops.length-1].name;
+        const seg = segmentInfo(r,o,d);
+        const departures = nextDeparturesFromStop(r,o,NOW,3);
+        return `
+          <div class="vg-result-card" onclick="App.openDetail('${r.id}')">
+            <div class="vg-result-top">
+              <span class="vg-tag" style="background:${r.color}1A;color:${r.color}">${r.code}</span>
+              ${icon("chevron-right",18,"var(--ink-soft)")}
+            </div>
+            <div class="vg-route-name" style="font-size:14px">${r.name}</div>
+            ${miniLine(r.color)}
+            <div class="vg-chips-row">
+              ${departures.map((t,i)=>`<span class="vg-chip ${i===0?"is-active":""}">${t}</span>`).join("")}
+            </div>
+            <div class="vg-result-bottom">
+              <span>${r.type==="electric"?"⚡ Buýt điện":"Buýt thường"}${seg.duration!=null?` · ${seg.duration} phút`:""}</span>
+              <span class="vg-price">${formatVND(r.price)}</span>
+            </div>
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `;
+}
+
+function screenDetail(){
+  const r = getRoute(state.activeRouteId);
+  if(!r) return screenHome();
+  const schedule = generateSchedule(r);
+  const boarding = getBoardingStop();
+  const alighting = getAlightingStop();
+  const upcoming = nextDeparturesFromStop(r, boarding, NOW, 4);
+  return `
+    <div class="vg-header">
+      <button class="vg-back-btn" onclick="App.goBack()">${icon("arrow-left",18)}</button>
+      <div>
+        <div class="vg-title" style="font-size:16px">${r.code} · ${r.name}</div>
+        <div class="vg-subtitle">${r.type==="electric"?"Buýt điện":"Buýt thường"} · ${r.stops.length} trạm dừng</div>
+      </div>
+    </div>
+    <div class="vg-content screen-enter" style="padding-bottom:100px">
+      <div class="vg-card">
+        <div class="vg-section-title" style="margin-bottom:10px">Lộ trình &amp; trạm dừng</div>
+        <div class="vg-stop-line">
+          <div class="vg-stop-track" style="background:${r.color}33"></div>
+          <div class="vg-stop-glow" style="background:${r.color};box-shadow:0 0 12px 3px ${r.color}88"></div>
+          ${r.stops.map((s,i)=>`
+            <div class="vg-stop-row">
+              <div class="vg-stop-dot ${(i===0||i===r.stops.length-1)?"is-edge":""}" style="border-color:${r.color};${(i===0||i===r.stops.length-1)?("background:"+r.color):""}"></div>
+              <div>
+                <div class="vg-stop-name">${s.name}</div>
+                <div class="vg-stop-time">${i===0?"Điểm xuất phát":`+${s.t} phút`}</div>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+      <div class="vg-info-grid">
+        <div class="vg-info-box"><div class="v">${r.frequency}'</div><div class="l">Tần suất</div></div>
+        <div class="vg-info-box"><div class="v">${r.hours.start}–${r.hours.end}</div><div class="l">Giờ hoạt động</div></div>
+        <div class="vg-info-box"><div class="v">${formatVND(r.price)}</div><div class="l">Giá vé</div></div>
+      </div>
+      <div>
+        <div class="vg-section-title" style="margin-bottom:10px">Chuyến tiếp theo từ ${boarding}</div>
+        <div class="vg-chips-row">
+          ${upcoming.map((t,i)=>`<span class="vg-chip ${i===0?"is-active":""}">${t}</span>`).join("")}
+        </div>
+      </div>
+      <div class="vg-card" style="display:flex;flex-direction:column;gap:8px">
+        <div class="vg-section-title" style="margin-bottom:2px">Lịch chạy đầy đủ</div>
+        <div style="font-size:12px;color:var(--ink-soft)">Từ ${r.stops[0].name}, mỗi ${r.frequency} phút — ${schedule.length} chuyến/ngày</div>
+      </div>
+      <button class="vg-btn-link" style="align-self:flex-start;padding:4px 0" onclick="App.openPass()">
+        ${icon("wallet",15)} Mua thẻ tháng cho tuyến này
+      </button>
+    </div>
+    <div class="vg-sticky-bottom">
+      <div class="vg-sticky-price">
+        <div class="v">${formatVND(r.price)}</div>
+        <div class="l">mỗi vé · ${boarding} → ${alighting}</div>
+      </div>
+      <button class="vg-btn vg-btn-primary" onclick="App.openBooking()">Đặt vé</button>
+    </div>
+  `;
+}
+
+function screenBooking(){
+  const r = getRoute(state.activeRouteId);
+  if(!r) return screenHome();
+  const boarding = getBoardingStop();
+  const alighting = getAlightingStop();
+  const times = nextDeparturesFromStop(r, boarding, NOW, 6);
+  const total = r.price * state.passengerCount;
+  return `
+    <div class="vg-header">
+      <button class="vg-back-btn" onclick="App.goBack()">${icon("arrow-left",18)}</button>
+      <div>
+        <div class="vg-title" style="font-size:16px">Đặt vé · ${r.code}</div>
+        <div class="vg-subtitle">${boarding} → ${alighting}</div>
+      </div>
+    </div>
+    <div class="vg-content screen-enter">
+      <div class="vg-card">
+        <div class="vg-section-title" style="margin-bottom:10px">${icon("clock",15)} Chọn giờ khởi hành</div>
+        <div class="vg-time-grid">
+          ${times.map(t=>`<div class="vg-time-option ${state.selectedTime===t?"is-selected":""}" onclick="App.setSelectedTime('${t}')">${t}</div>`).join("")}
+        </div>
+      </div>
+      <div class="vg-card">
+        <div class="vg-section-title" style="margin-bottom:10px">Số lượng vé</div>
+        <div class="vg-stepper">
+          <button ${state.passengerCount<=1?"disabled":""} onclick="App.changePassengers(-1)">${icon("minus",15)}</button>
+          <span class="n">${state.passengerCount}</span>
+          <button ${state.passengerCount>=5?"disabled":""} onclick="App.changePassengers(1)">${icon("plus",15)}</button>
+        </div>
+      </div>
+      <div class="vg-card">
+        <div class="vg-section-title" style="margin-bottom:6px">Tóm tắt</div>
+        <div class="vg-summary-row"><span>Tuyến</span><strong>${r.code} · ${r.name}</strong></div>
+        <div class="vg-summary-row"><span>Giờ khởi hành</span><strong>${state.selectedTime}</strong></div>
+        <div class="vg-summary-row"><span>Số vé</span><strong>${state.passengerCount}</strong></div>
+        <div class="vg-summary-total"><span>Tổng tiền</span><span>${formatVND(total)}</span></div>
+      </div>
+    </div>
+    <div class="vg-sticky-bottom">
+      <button class="vg-btn vg-btn-primary" style="width:100%" onclick="App.confirmBooking()">Xác nhận đặt vé · ${formatVND(total)}</button>
+    </div>
+  `;
+}
+
+function screenPass(){
+  const r = getRoute(state.activeRouteId);
+  if(!r) return screenHome();
+  return `
+    <div class="vg-header">
+      <button class="vg-back-btn" onclick="App.goBack()">${icon("arrow-left",18)}</button>
+      <div>
+        <div class="vg-title" style="font-size:16px">Mua thẻ tháng · ${r.code}</div>
+        <div class="vg-subtitle">${r.name}</div>
+      </div>
+    </div>
+    <div class="vg-content screen-enter">
+      <p style="font-size:13px;color:var(--ink-soft)">Đi lại không giới hạn trên tuyến ${r.code} trong thời hạn thẻ.</p>
+      ${PASS_PLANS.map(p=>`
+        <div class="vg-plan-card ${state.selectedPlan===p.id?"is-selected":""}" onclick="App.setSelectedPlan('${p.id}')">
+          <div>
+            <div style="font-weight:700;color:var(--ink)">${p.label} ${p.save?`<span class="vg-plan-badge">${p.save}</span>`:""}</div>
+            <div style="font-size:12px;color:var(--ink-soft);margin-top:2px">Không giới hạn số chuyến</div>
+          </div>
+          <div style="font-family:'IBM Plex Mono';font-weight:700;color:var(--ink)">${formatVND(p.price)}</div>
+        </div>
+      `).join("")}
+    </div>
+    <div class="vg-sticky-bottom">
+      <button class="vg-btn vg-btn-primary" style="width:100%" ${!state.selectedPlan?"disabled":""} onclick="App.confirmPass()">Xác nhận mua</button>
+    </div>
+  `;
+}
+
+function screenConfirm(){
+  const t = state.tickets.find(tk=>tk.id===state.confirmedTicketId);
+  if(!t) return screenHome();
+  const isPass = t.type==="pass";
+  return `
+    <div class="vg-content screen-enter" style="padding-top:28px">
+      <button class="vg-back-btn" style="align-self:flex-end;background:var(--surface-2);color:var(--ink)" onclick="App.goTab('home')">${icon("x",18)}</button>
+      <div class="vg-success-icon">${icon("check-circle-2",34)}</div>
+      <div style="text-align:center">
+        <div style="font-family:'Sora';font-weight:700;font-size:18px;color:var(--ink)">${isPass?"Mua thẻ tháng thành công":"Đặt vé thành công"}</div>
+        <p style="font-size:13px;color:var(--ink-soft);margin-top:4px">Mã vé của bạn đã được lưu vào "Vé của tôi".</p>
+      </div>
+      <div class="vg-ticket-card">
+        <div class="vg-ticket-top" style="background:${t.color}">
+          <div style="font-size:12px;opacity:0.85">${isPass?"Thẻ tháng":"Vé lượt"}</div>
+          <div style="font-family:'Sora';font-weight:700;font-size:17px">${t.routeCode} · ${t.routeName}</div>
+        </div>
+        <div class="vg-ticket-mid">
+          ${isPass ? `
+            <div class="vg-summary-row"><span>Loại thẻ</span><strong>${t.planLabel}</strong></div>
+            <div class="vg-summary-row"><span>Ngày mua</span><strong>${t.purchaseDate}</strong></div>
+            <div class="vg-summary-row"><span>Hết hạn</span><strong>${t.expiry}</strong></div>
+          ` : `
+            <div class="vg-summary-row"><span>Từ</span><strong>${t.from}</strong></div>
+            <div class="vg-summary-row"><span>Đến</span><strong>${t.to}</strong></div>
+            <div class="vg-summary-row"><span>Giờ khởi hành</span><strong>${t.time} · ${t.date}</strong></div>
+            <div class="vg-summary-row"><span>Số vé</span><strong>${t.count}</strong></div>
+          `}
+          <div class="vg-summary-total"><span>Tổng tiền</span><span>${formatVND(t.total)}</span></div>
+        </div>
+        <div class="vg-perforation"></div>
+        <div class="vg-qr-wrap">
+          <div class="vg-qr-grid">${qrCellsHTML(t.id)}</div>
+          <div>
+            <div style="font-size:11px;color:var(--ink-soft)">Mã vé</div>
+            <div style="font-family:'IBM Plex Mono';font-weight:700;font-size:15px">${t.id}</div>
+            <div style="font-size:11px;color:var(--ink-soft);margin-top:4px">Quét tại cửa xe</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="vg-btn vg-btn-ghost" style="flex:1" onclick="App.goTab('home')">Về trang chủ</button>
+        <button class="vg-btn vg-btn-dark" style="flex:1" onclick="App.goTab('tickets')">Xem vé của tôi</button>
+      </div>
+    </div>
+  `;
+}
+
+function screenTickets(){
+  const tripTickets = state.tickets.filter(t=>t.type==="trip");
+  const passTickets = state.tickets.filter(t=>t.type==="pass");
+  const list = state.ticketsTab==="trip" ? tripTickets : passTickets;
+  return `
+    <div class="vg-header is-light">
+      <div>
+        <div class="vg-title">Vé của tôi</div>
+        <div class="vg-subtitle">${state.tickets.length} vé đã lưu</div>
+      </div>
+    </div>
+    <div class="vg-content screen-enter">
+      <div class="vg-tabs">
+        <button class="vg-tab ${state.ticketsTab==="trip"?"is-active":""}" onclick="App.setTicketsTab('trip')">Vé lượt (${tripTickets.length})</button>
+        <button class="vg-tab ${state.ticketsTab==="pass"?"is-active":""}" onclick="App.setTicketsTab('pass')">Thẻ tháng (${passTickets.length})</button>
+      </div>
+      ${list.length===0 ? `
+        <div class="vg-empty">
+          <div class="vg-empty-icon">${icon("ticket",26)}</div>
+          <div style="font-weight:600;color:var(--ink)">Chưa có ${state.ticketsTab==="trip"?"vé lượt":"thẻ tháng"} nào</div>
+          <p style="font-size:13px">Tìm chuyến và đặt vé để bắt đầu hành trình.</p>
+          <button class="vg-btn vg-btn-primary" onclick="App.goTab('home')">Tìm chuyến ngay</button>
+        </div>
+      ` : list.map(t=>`
+        <div class="vg-result-card" style="cursor:default">
+          <div class="vg-result-top">
+            <span class="vg-tag" style="background:${t.color}1A;color:${t.color}">${t.routeCode}</span>
+            <span style="font-family:'IBM Plex Mono';font-size:11px;color:var(--ink-soft)">${t.id}</span>
+          </div>
+          <div class="vg-route-name" style="font-size:14px">${t.routeName}</div>
+          ${t.type==="trip" ? `
+            <div class="vg-result-bottom"><span>${t.from} → ${t.to} · ${t.time}</span><span class="vg-price">${formatVND(t.total)}</span></div>
+          ` : `
+            <div class="vg-result-bottom"><span>${t.planLabel} · hết hạn ${t.expiry}</span><span class="vg-price">${formatVND(t.total)}</span></div>
+          `}
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+/* --------------------------------- Render ----------------------------------- */
+
+const SCREENS = {
+  home: screenHome, results: screenResults, detail: screenDetail,
+  booking: screenBooking, pass: screenPass, confirm: screenConfirm, tickets: screenTickets,
+};
+
+function render(){
+  const fn = SCREENS[state.view] || screenHome;
+  document.getElementById("root").innerHTML = `
+    <div class="vg-frame">
+      ${fn()}
+      <div class="vg-bottom-nav">
+        <button class="vg-nav-btn ${state.view!=="tickets"?"is-active":""}" onclick="App.goTab('home')">${icon("search",18)}<span>Tìm tuyến</span></button>
+        <button class="vg-nav-btn ${state.view==="tickets"?"is-active":""}" onclick="App.goTab('tickets')">${icon("ticket",18)}<span>Vé của tôi</span></button>
+      </div>
+    </div>
+  `;
+  if(window.lucide) lucide.createIcons();
+}
+
+render();
+</script>
+</body>
+</html>
