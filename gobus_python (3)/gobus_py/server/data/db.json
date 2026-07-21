@@ -1,0 +1,417 @@
+{
+  "ROUTES": [
+    {
+      "id": "e03",
+      "code": "E03",
+      "name": "Vinhomes Ocean Park 1 – Long Biên",
+      "type": "electric",
+      "price": 9000,
+      "frequency": 15,
+      "hours": {
+        "start": "05:00",
+        "end": "22:00"
+      },
+      "color": "#1FAE7C",
+      "stops": [
+        {
+          "name": "Vinhomes Ocean Park 1",
+          "t": 0,
+          "lat": 20.993,
+          "lng": 105.933
+        },
+        {
+          "name": "Vinhomes Ocean Park 3",
+          "t": 9,
+          "lat": 20.985,
+          "lng": 105.943
+        },
+        {
+          "name": "Cầu Vĩnh Tuy",
+          "t": 24,
+          "lat": 21.008,
+          "lng": 105.879
+        },
+        {
+          "name": "Long Biên",
+          "t": 38,
+          "lat": 21.0378,
+          "lng": 105.8611
+        }
+      ]
+    },
+    {
+      "id": "e05",
+      "code": "E05",
+      "name": "Vinhomes Smart City – Hồ Gươm",
+      "type": "electric",
+      "price": 9000,
+      "frequency": 20,
+      "hours": {
+        "start": "05:30",
+        "end": "22:30"
+      },
+      "color": "#1FAE7C",
+      "stops": [
+        {
+          "name": "Vinhomes Smart City",
+          "t": 0,
+          "lat": 21.014,
+          "lng": 105.737
+        },
+        {
+          "name": "Cầu Giấy",
+          "t": 17,
+          "lat": 21.0325,
+          "lng": 105.7935
+        },
+        {
+          "name": "Kim Mã",
+          "t": 27,
+          "lat": 21.0323,
+          "lng": 105.8151
+        },
+        {
+          "name": "Hồ Gươm",
+          "t": 40,
+          "lat": 21.0285,
+          "lng": 105.8542
+        }
+      ]
+    },
+    {
+      "id": "09a",
+      "code": "09A",
+      "name": "Hồ Gươm – Hồ Tây – Cầu Giấy",
+      "type": "regular",
+      "price": 7000,
+      "frequency": 10,
+      "hours": {
+        "start": "05:00",
+        "end": "21:00"
+      },
+      "color": "#3C7CD9",
+      "stops": [
+        {
+          "name": "Hồ Gươm",
+          "t": 0,
+          "lat": 21.0285,
+          "lng": 105.8542
+        },
+        {
+          "name": "Hồ Tây",
+          "t": 14,
+          "lat": 21.0578,
+          "lng": 105.8194
+        },
+        {
+          "name": "Bưởi",
+          "t": 24,
+          "lat": 21.0483,
+          "lng": 105.8095
+        },
+        {
+          "name": "Cầu Giấy",
+          "t": 34,
+          "lat": 21.0325,
+          "lng": 105.7935
+        }
+      ]
+    },
+    {
+      "id": "e09",
+      "code": "E09",
+      "name": "Vinhomes Ocean Park 1 – Aeon Mall Long Biên",
+      "type": "electric",
+      "price": 8000,
+      "frequency": 15,
+      "hours": {
+        "start": "05:00",
+        "end": "22:00"
+      },
+      "color": "#1FAE7C",
+      "stops": [
+        {
+          "name": "Vinhomes Ocean Park 1",
+          "t": 0,
+          "lat": 20.993,
+          "lng": 105.933
+        },
+        {
+          "name": "Vinhomes Ocean Park 2",
+          "t": 6,
+          "lat": 20.988,
+          "lng": 105.938
+        },
+        {
+          "name": "Đa Tốn",
+          "t": 13,
+          "lat": 20.98,
+          "lng": 105.915
+        },
+        {
+          "name": "Aeon Mall Long Biên",
+          "t": 21,
+          "lat": 21.0453,
+          "lng": 105.889
+        }
+      ]
+    },
+    {
+      "id": "32",
+      "code": "32",
+      "name": "Nhổn – Cầu Giấy – Giáp Bát",
+      "type": "regular",
+      "price": 7000,
+      "frequency": 12,
+      "hours": {
+        "start": "05:00",
+        "end": "21:30"
+      },
+      "color": "#3C7CD9",
+      "stops": [
+        {
+          "name": "Nhổn",
+          "t": 0,
+          "lat": 21.0796,
+          "lng": 105.7332
+        },
+        {
+          "name": "Cầu Giấy",
+          "t": 19,
+          "lat": 21.0325,
+          "lng": 105.7935
+        },
+        {
+          "name": "Kim Mã",
+          "t": 29,
+          "lat": 21.0323,
+          "lng": 105.8151
+        },
+        {
+          "name": "Bến xe Giáp Bát",
+          "t": 54,
+          "lat": 20.9757,
+          "lng": 105.8412
+        }
+      ]
+    }
+  ],
+  "PASS_PLANS": [
+    {
+      "id": "1m",
+      "label": "1 tháng",
+      "months": 1,
+      "price": 200000
+    },
+    {
+      "id": "3m",
+      "label": "3 tháng",
+      "months": 3,
+      "price": 540000,
+      "save": "Tiết kiệm 60.000đ"
+    },
+    {
+      "id": "6m",
+      "label": "6 tháng",
+      "months": 6,
+      "price": 1000000,
+      "save": "Tiết kiệm 200.000đ"
+    }
+  ],
+  "WEEKDAYS": [
+    "CN",
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T6",
+    "T7"
+  ],
+  "PROMO_CODES": {
+    "GOBUS10": {
+      "discount": 0.1,
+      "label": "Giảm 10%"
+    },
+    "BUYT2026": {
+      "discount": 5000,
+      "label": "Giảm 5.000đ"
+    },
+    "GOGREEN": {
+      "discount": 0.15,
+      "label": "Giảm 15%"
+    }
+  },
+  "DEMO_BOOKINGS": [
+    {
+      "id": "GB7F3K2A",
+      "routeCode": "E03",
+      "customer": "Nguyễn Văn An",
+      "date": "17/06/2026",
+      "time": "07:15",
+      "count": 2,
+      "total": 18000,
+      "status": "confirmed"
+    },
+    {
+      "id": "GB2H9L4D",
+      "routeCode": "E05",
+      "customer": "Trần Thị Bình",
+      "date": "17/06/2026",
+      "time": "08:00",
+      "count": 1,
+      "total": 9000,
+      "status": "used"
+    },
+    {
+      "id": "GB5K1M8P",
+      "routeCode": "09A",
+      "customer": "Lê Hoàng Cường",
+      "date": "16/06/2026",
+      "time": "17:30",
+      "count": 3,
+      "total": 21000,
+      "status": "used"
+    },
+    {
+      "id": "GB9Q3N2R",
+      "routeCode": "E09",
+      "customer": "Phạm Thị Dung",
+      "date": "18/06/2026",
+      "time": "09:10",
+      "count": 1,
+      "total": 8000,
+      "status": "confirmed"
+    },
+    {
+      "id": "GB4T7V1X",
+      "routeCode": "32",
+      "customer": "Hoàng Văn Em",
+      "date": "15/06/2026",
+      "time": "06:45",
+      "count": 2,
+      "total": 14000,
+      "status": "cancelled"
+    },
+    {
+      "id": "GB6W2Y9Z",
+      "routeCode": "E03",
+      "customer": "Vũ Thị Hoa",
+      "date": "18/06/2026",
+      "time": "12:00",
+      "count": 4,
+      "total": 36000,
+      "status": "confirmed"
+    }
+  ],
+  "DEMO_PASSES": [
+    {
+      "id": "GB3G6H9J",
+      "routeCode": "E03",
+      "customer": "Nguyễn Văn An",
+      "planLabel": "3 tháng",
+      "purchaseDate": "01/05/2026",
+      "expiry": "01/08/2026",
+      "total": 540000,
+      "status": "active"
+    },
+    {
+      "id": "GB5K8L2M",
+      "routeCode": "E05",
+      "customer": "Trần Thị Bình",
+      "planLabel": "1 tháng",
+      "purchaseDate": "01/06/2026",
+      "expiry": "01/07/2026",
+      "total": 200000,
+      "status": "active"
+    },
+    {
+      "id": "GB9R3S6T",
+      "routeCode": "E09",
+      "customer": "Phạm Thị Dung",
+      "planLabel": "1 tháng",
+      "purchaseDate": "01/03/2026",
+      "expiry": "01/04/2026",
+      "total": 200000,
+      "status": "expired"
+    }
+  ],
+  "DEMO_DRIVERS": [
+    {
+      "id": "D001",
+      "name": "Trần Văn Bình",
+      "phone": "0912 345 678",
+      "routeCode": "E03",
+      "vehicle": "51B-123.45",
+      "status": "on_duty",
+      "rating": 4.8
+    },
+    {
+      "id": "D002",
+      "name": "Nguyễn Thị Cúc",
+      "phone": "0987 654 321",
+      "routeCode": "E05",
+      "vehicle": "51B-678.90",
+      "status": "on_duty",
+      "rating": 4.9
+    },
+    {
+      "id": "D003",
+      "name": "Lê Hoàng Dũng",
+      "phone": "0934 111 222",
+      "routeCode": "09A",
+      "vehicle": "51B-246.80",
+      "status": "off_duty",
+      "rating": 4.7
+    },
+    {
+      "id": "D004",
+      "name": "Phạm Văn Đức",
+      "phone": "0978 333 444",
+      "routeCode": "E09",
+      "vehicle": "51B-135.79",
+      "status": "on_duty",
+      "rating": 4.6
+    },
+    {
+      "id": "D005",
+      "name": "Vũ Thị Hằng",
+      "phone": "0901 555 666",
+      "routeCode": "32",
+      "vehicle": "51B-357.91",
+      "status": "maintenance",
+      "rating": 4.5
+    }
+  ],
+  "DEMO_PROMOS": [
+    {
+      "id": "P001",
+      "code": "GOBUS10",
+      "desc": "Giảm 10% tất cả vé lượt",
+      "discount": "10%",
+      "uses": 142,
+      "limit": 500,
+      "expiry": "31/07/2026",
+      "status": "active"
+    },
+    {
+      "id": "P002",
+      "code": "BUYT2026",
+      "desc": "Giảm 5.000đ mỗi vé",
+      "discount": "5.000đ",
+      "uses": 89,
+      "limit": 200,
+      "expiry": "30/06/2026",
+      "status": "active"
+    },
+    {
+      "id": "P003",
+      "code": "GOGREEN",
+      "desc": "Giảm 15% vé buýt điện",
+      "discount": "15%",
+      "uses": 200,
+      "limit": 200,
+      "expiry": "15/06/2026",
+      "status": "expired"
+    }
+  ]
+}
