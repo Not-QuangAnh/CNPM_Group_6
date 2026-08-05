@@ -20,7 +20,7 @@
 
 ## Nhật ký chi tiết
 
-### [08/08/2026] — Chi tiết hóa Yêu cầu & Tạo thư viện Prompts
+### [Ngày] — [Tiêu đề phiên làm việc tiếp theo]
 
 - **Công cụ AI dùng:** ChatGPT / Claude
 - **Mục tiêu phiên làm việc:** Bổ sung Tiêu chí chấp nhận (Given-When-Then) và phân loại độ ưu tiên MoSCoW vào `REQUIREMENTS.md`; đồng thời tổng hợp thư viện câu lệnh vào `PROMPTS.md`.
@@ -32,7 +32,7 @@
   - [ ] Chuyển các User Story và Acceptance Criteria thành các Issue tương ứng trên GitHub Issues.
   - [ ] Đảm bảo các prompt trong `PROMPTS.md` hoạt động tốt trên các công cụ AI khác nhau.
 
-### [08/08/2026] — Quản lý công việc trên GitHub Issues
+### [Ngày] — [Tiêu đề phiên làm việc tiếp theo]
 
 - **Công cụ AI dùng:** Gemini
 - **Mục tiêu phiên làm việc:** Sinh nội dung mô tả chi tiết cho từng GitHub Issue dựa trên các User Story đã chốt.
