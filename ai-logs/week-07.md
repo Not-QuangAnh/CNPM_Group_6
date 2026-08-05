@@ -1,31 +1,29 @@
-# Nhật ký sử dụng AI - Tuần 07
+# AI LOG - TUẦN 07
 
-## Công việc
+## Mục tiêu
 
-Hoàn thiện chức năng đặt vé và rà soát mã nguồn.
-
----
-
-## Prompt đã sử dụng
-
-Đề xuất cách cải thiện chức năng đặt vé trong Flask, bổ sung kiểm tra dữ liệu đầu vào và xử lý lỗi.
+Hoàn thiện chức năng đặt vé và rà soát chất lượng mã nguồn.
 
 ---
 
-## Kết quả AI trả về
+## Công việc sử dụng AI
 
-- Gợi ý kiểm tra dữ liệu đầu vào.
-- Cải thiện xử lý ngoại lệ.
-- Loại bỏ đoạn mã bị trùng lặp.
+- Hỗ trợ phân tích luồng xử lý chức năng đặt vé.
+- Gợi ý cách kiểm tra dữ liệu đầu vào.
+- Đề xuất cải thiện xử lý ngoại lệ trong Flask.
 
 ---
 
-## Đánh giá của thành viên
+## Đánh giá
 
-Các gợi ý phù hợp với dự án nhưng đã được kiểm tra và chỉnh sửa lại trước khi áp dụng.
+Các gợi ý từ AI được đối chiếu với mã nguồn trước khi áp dụng.
+
+Nhóm chỉ sử dụng các đề xuất phù hợp với kiến trúc hiện tại của dự án.
 
 ---
 
 ## Kết quả
 
-Chức năng đặt vé hoạt động ổn định hơn và mã nguồn dễ bảo trì hơn.
+- Mã nguồn dễ bảo trì hơn.
+- Cải thiện khả năng đọc hiểu của chương trình.
+- Hạn chế một số lỗi khi người dùng nhập dữ liệu không hợp lệ.
