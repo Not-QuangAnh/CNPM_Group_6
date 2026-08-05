@@ -1,29 +1,31 @@
-# Ghi chú Review Code
+# REVIEW NOTES
 
 ## Chức năng được review
 
-Chức năng đặt vé xe.
+- Xác thực người dùng
+- Đặt vé
+- Quản lý tuyến xe
 
 ---
 
 ## Nội dung góp ý
 
-- Đặt tên biến rõ ràng hơn.
-- Loại bỏ đoạn mã trùng lặp.
-- Kiểm tra dữ liệu đầu vào đầy đủ hơn.
-- Cải thiện thông báo lỗi.
+- Một số hàm còn xử lý nhiều chức năng cùng lúc.
+- Một số tên biến chưa thể hiện rõ ý nghĩa.
+- Cần bổ sung kiểm tra dữ liệu đầu vào.
+- Nên thống nhất cách xử lý lỗi giữa các API.
 
 ---
 
-## Thay đổi đã thực hiện
+## Thay đổi sau review
 
-- Refactor lại một số hàm.
+- Cải thiện cách đặt tên biến.
 - Bổ sung kiểm tra dữ liệu.
-- Cải thiện xử lý ngoại lệ.
-- Bổ sung chú thích trong mã nguồn.
+- Thống nhất thông báo lỗi.
+- Cập nhật chú thích trong mã nguồn.
 
 ---
 
 ## Kết quả
 
-Sau khi chỉnh sửa, mã nguồn dễ đọc hơn, dễ bảo trì và hạn chế lỗi phát sinh.
+Mã nguồn dễ đọc hơn, giảm mã lặp và thuận tiện cho việc bảo trì.
