@@ -20,7 +20,7 @@
 
 ## Nhật ký chi tiết
 
-### [08/08/2026] — Lập trình Chức năng Core & Tối ưu mã nguồn
+### [Ngày] — [Tiêu đề ngắn gọn của việc đã làm]
 
 - **Công cụ AI dùng:** GitHub Copilot / ChatGPT
 - **Mục tiêu phiên làm việc:** Hỗ trợ viết logic cho tính năng Core chính của ứng dụng và refactor các đoạn code dài vi phạm nguyên tắc Clean Code.
@@ -31,7 +31,7 @@
 - **Ghi chú / rủi ro cần theo dõi:**
   - [ ] Chờ thành viên trong nhóm hoàn tất Code Review trên Pull Request trước khi bấm Merge vào `main`.
 
-### [08/08/2026] — Sinh Unit Test & Đóng gói bài nộp
+### [Ngày] — [Tiêu đề ngắn gọn của việc đã làm]
 
 - **Công cụ AI dùng:** Gemini
 - **Mục tiêu phiên làm việc:** Sinh các case Unit Test phủ các trường hợp biên (boundary value tests) và tổng hợp kết quả test.
