@@ -1,30 +1,20 @@
 # Kết quả kiểm thử
 
-## Môi trường
+## Công cụ
 
-- Python 3.x
-- Flask
-- SQL Server
 - Pytest
+- Python 3.x
 
----
+## Các module đã kiểm thử
 
-## Kết quả
+| Module | File kiểm thử | Kết quả |
+|---------|---------------|----------|
+| Xác thực khách hàng | test_auth_customer.py | PASS |
+| Phân quyền quản trị | test_admin_authorization.py | PASS |
+| Đổi mật khẩu Admin | test_admin_password.py | PASS |
+| Khuyến mãi | test_promos.py | PASS |
+| Tuyến xe & Đặt vé | test_routes_and_bookings.py | PASS |
 
-| Chức năng | Kết quả |
-|-----------|----------|
-| Đăng nhập khách hàng | PASS |
-| Đăng nhập quản trị | PASS |
-| Đặt vé | PASS |
-| Khuyến mãi | PASS |
-| Phân quyền | PASS |
-| Kết nối cơ sở dữ liệu | PASS |
+## Kết luận
 
----
-
-## Tổng kết
-
-- Số bài kiểm thử thành công: 6
-- Số bài kiểm thử thất bại: 0
-
-Kết luận: Hệ thống hoạt động ổn định và đáp ứng các yêu cầu kiểm thử.
+Các bài kiểm thử hiện có đều chạy thành công và các chức năng chính của hệ thống hoạt động đúng như mong đợi.
