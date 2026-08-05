@@ -20,7 +20,7 @@
 
 ## Nhật ký chi tiết
 
-### [08/08/2026] — Tổng quan Codebase & Khởi tạo Yêu cầu dự án
+### [Ngày] — [Tiêu đề phiên làm việc tiếp theo]
 
 - **Công cụ AI dùng:** ChatGPT / Claude
 - **Mục tiêu phiên làm việc:** Rà soát cấu trúc thư mục hiện tại của dự án để viết `CODEBASE_OVERVIEW.md`; đồng thời chuẩn hóa danh sách User Stories trong `REQUIREMENTS.md`.
@@ -32,7 +32,7 @@
   - [ ] Danh sách User Story trong `REQUIREMENTS.md` cần bổ sung Tiêu chí chấp nhận (Acceptance Criteria) ở Tuần 04.
   - [ ] Cần đảm bảo các thành viên nắm rõ quy trình chạy project trong `CODEBASE_OVERVIEW.md`.
 
-### [08/08/2026] — Cập nhật & Tối ưu hóa Luồng người dùng
+### [Ngày] — [Tiêu đề phiên làm việc tiếp theo]
 
 - **Công cụ AI dùng:** Gemini
 - **Mục tiêu phiên làm việc:** Chuẩn hóa quy trình làm việc với AI Log và hỗ trợ thao tác đẩy tài liệu lên GitHub.
