@@ -20,7 +20,7 @@
 
 ## Nhật ký chi tiết
 
-### [08/08/2026] — Thiết kế Kiến trúc Hệ thống & CSDL
+### [Ngày] — [Tiêu đề ngắn gọn của việc đã làm]
 
 - **Công cụ AI dùng:** Claude / ChatGPT
 - **Mục tiêu phiên làm việc:** Sinh mã Mermaid.js cho sơ đồ ERD, thiết kế cấu trúc bảng dữ liệu và lập sơ đồ kiến trúc hệ thống 3 tầng (3-tier architecture).
@@ -32,7 +32,7 @@
   - [ ] Cần tạo file Migration SQL khởi tạo CSDL dựa trên schema trong `data-model.md`.
   - [ ] Kiểm tra tính toàn vẹn dữ liệu giữa khóa chính và khóa ngoại.
 
-### [08/08/2026] — Thiết kế Tính năng tích hợp AI
+### [Ngày] — [Tiêu đề ngắn gọn của việc đã làm]
 
 - **Công cụ AI dùng:** Gemini
 - **Mục tiêu phiên làm việc:** Soạn thảo tài liệu `AI_FEATURE_DESIGN.md` mô tả input/output, mô hình sử dụng và cơ chế xử lý ngoại lệ cho tính năng AI.
